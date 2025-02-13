@@ -3,8 +3,29 @@ IP="$1"
 USER="$2"
 PASS="$3"
 
-ffplay -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0" &
-ffplay -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0" &
+# Define RTSP URLs
+URL1="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0"
+URL2="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0"
+
+# Function to launch ffplay instance and monitor it
+launch_ffplay() {
+    local url=$1
+    while true; do
+        ffplay -hide_banner -loglevel quiet -rtsp_transport tcp -i "$url" &
+        pid=$!
+        wait $pid  # Wait for the process to exit
+        echo "ffplay for $url crashed, restarting..."
+        sleep 1  # Short delay before restart
+    done
+}
+
+# Launch both instances in background
+launch_ffplay "$URL1" &
+launch_ffplay "$URL2" &
+
+# Wait for all background jobs
+wait
+
 
 # ffmpeg -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0" \
 #        -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0" \
