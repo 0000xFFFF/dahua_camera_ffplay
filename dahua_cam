@@ -2,4 +2,7 @@
 IP="$1"
 USER="$2"
 PASS="$3"
-ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554"
+
+while true; do
+    ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554"
+done
