@@ -6,6 +6,8 @@ PASS="$3"
 # Define RTSP URLs
 URL1="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0"
 URL2="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0"
+URL3="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=3&subtype=0"
+URL4="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=4&subtype=0"
 
 # Function to launch ffplay instance and monitor it
 launch_ffplay() {
@@ -22,6 +24,8 @@ launch_ffplay() {
 # Launch both instances in background
 launch_ffplay "$URL1" &
 launch_ffplay "$URL2" &
+launch_ffplay "$URL3" &
+launch_ffplay "$URL4" &
 
 # Wait for all background jobs
 wait
