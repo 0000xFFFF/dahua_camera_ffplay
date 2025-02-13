@@ -1,0 +1,2 @@
+Prevent screen off when closing laptop lid:
+To prevent sleep, disable the call to zzz in /etc/acpi/handler.sh. It should be in the button/lid case.
