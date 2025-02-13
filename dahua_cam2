@@ -3,10 +3,10 @@ IP="$1"
 USER="$2"
 PASS="$3"
 
-#ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0"
-#ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0"
+ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0" &
+ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0" &
 
-ffmpeg -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0" \
-       -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0" \
-       -filter_complex "[0:v][1:v]vstack=inputs=2[v]" -map "[v]" -f matroska - | ffplay -fs -
+# ffmpeg -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0" \
+#        -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0" \
+#        -filter_complex "[0:v][1:v]vstack=inputs=2[v]" -map "[v]" -f matroska - | ffplay -fs -
 
