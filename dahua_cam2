@@ -38,7 +38,7 @@ while [ $(count_ffplay_windows) -lt 4 ]; do
 done
 
 # Apply 2x2 grid layout in i3
-i3-msg "workspace current; split h"
+i3-msg "[class=\"ffplay\"] focus; split h"
 sleep 0.1
 i3-msg "focus left; split v"
 sleep 0.1
