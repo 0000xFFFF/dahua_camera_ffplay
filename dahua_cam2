@@ -9,7 +9,7 @@ URL2="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0"
 #URL3="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=3&subtype=0"
 #URL4="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=4&subtype=0"
 
-i3-msg "worspace 0; split v"
+i3-msg "worspace 0; split h"
 
 # Function to launch ffplay instance and monitor it
 launch_ffplay() {
