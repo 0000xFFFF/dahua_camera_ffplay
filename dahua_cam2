@@ -27,6 +27,23 @@ launch_ffplay "$URL2" &
 launch_ffplay "$URL3" &
 launch_ffplay "$URL4" &
 
+# Function to count ffplay windows
+count_ffplay_windows() {
+    i3-msg -t get_tree | jq '.. | objects | select(.window_properties.class? == "ffplay")' | wc -l
+}
+
+# Wait for all four ffplay windows to appear
+while [ $(count_ffplay_windows) -lt 4 ]; do
+    sleep 1  # Adjust delay if needed
+done
+
+# Apply 2x2 grid layout in i3
+i3-msg "workspace current; split h"
+sleep 0.1
+i3-msg "focus left; split v"
+sleep 0.1
+i3-msg "focus right; split v"
+
 # Wait for all background jobs
 wait
 
