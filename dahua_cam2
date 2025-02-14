@@ -6,8 +6,10 @@ PASS="$3"
 # Define RTSP URLs
 URL1="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0"
 URL2="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=2&subtype=0"
-URL3="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=3&subtype=0"
-URL4="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=4&subtype=0"
+#URL3="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=3&subtype=0"
+#URL4="rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=4&subtype=0"
+
+i3-msg "worspace 0; split v"
 
 # Function to launch ffplay instance and monitor it
 launch_ffplay() {
@@ -24,25 +26,9 @@ launch_ffplay() {
 # Launch both instances in background
 launch_ffplay "$URL1" &
 launch_ffplay "$URL2" &
-launch_ffplay "$URL3" &
-launch_ffplay "$URL4" &
+#launch_ffplay "$URL3" &
+#launch_ffplay "$URL4" &
 
-# Function to count ffplay windows
-count_ffplay_windows() {
-    i3-msg -t get_tree | jq '.. | objects | select(.window_properties.class? == "ffplay")' | wc -l
-}
-
-# Wait for all four ffplay windows to appear
-while [ $(count_ffplay_windows) -lt 4 ]; do
-    sleep 1  # Adjust delay if needed
-done
-
-# Apply 2x2 grid layout in i3
-i3-msg "[class=\"ffplay\"] focus; split h"
-sleep 0.1
-i3-msg "focus left; split v"
-sleep 0.1
-i3-msg "focus right; split v"
 
 # Wait for all background jobs
 wait
