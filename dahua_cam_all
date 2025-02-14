@@ -4,5 +4,6 @@ USER="$2"
 PASS="$3"
 
 while true; do
-    ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=0&subtype=0"
+    #ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=0&subtype=0"
+    ffplay -fs -vf "crop=704:384:0:0" -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=0&subtype=0"
 done
