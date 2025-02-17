@@ -17,10 +17,10 @@ while true; do
             echo "ffplay is not running..."
             break
         fi
-
-        if [ $(stat -c%s "ffplay.log") -gt 20971520 ]; then
+  
+        if [ $(stat -c%s "ffplay.log") -gt 1048576 ]; then
             echo "Truncating log file..."
-            truncate -s 10M ffplay.log  # Reduce to 10MB instead of deleting
+            truncate -s 0 ffplay.log
         fi
 
         if [ $(tail -n 200 ffplay.log | grep -c "vq= * 0KB") -gt 100 ]; then
