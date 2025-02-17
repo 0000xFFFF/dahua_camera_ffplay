@@ -2,8 +2,33 @@
 IP="$1"
 USER="$2"
 PASS="$3"
-
+ 
 while true; do
-    #ffplay -fs -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=0&subtype=0"
-    ffplay -fs -vf "crop=704:384:0:0" -hide_banner -loglevel quiet -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=0&subtype=0"
+    #-fs
+    echo "starting ffplay"
+    ffplay -fs -vf "crop=704:384:0:0" -hide_banner -loglevel verbose -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=0&subtype=0" 2>&1 | tr '\r' '\n' > ffplay.log &
+    FFPLAY_PID=$!
+
+    sleep 10
+
+    while true; do
+        # Check if ffplay is still running
+        if ! ps -p $FFPLAY_PID > /dev/null; then
+            echo "ffplay is not running..."
+            break
+        fi
+
+        if [ $(stat -c%s "ffplay.log") -gt 20971520 ]; then
+            echo "Truncating log file..."
+            truncate -s 10M ffplay.log  # Reduce to 10MB instead of deleting
+        fi
+
+        if [ $(tail -n 200 ffplay.log | grep -c "vq= * 0KB") -gt 100 ]; then
+            echo "Video queue is empty for too long."
+            kill $FFPLAY_PID
+            break
+        fi
+
+        sleep 5
+    done
 done
