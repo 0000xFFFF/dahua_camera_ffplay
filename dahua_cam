@@ -6,7 +6,7 @@ PASS="$3"
 while true; do
     #-fs
     echo "starting ffplay"
-    ffplay -fs -hide_banner -loglevel verbose -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554" 2>&1 | tr '\r' '\n' > ffplay.log &
+    ffplay -fs -hide_banner -loglevel verbose -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=1&subtype=0" 2>&1 | tr '\r' '\n' > ffplay.log &
     FFPLAY_PID=$!
 
     sleep 10
