@@ -1,34 +1,67 @@
-#!/bin/bash
-IP="$1"
-USER="$2"
-PASS="$3"
- 
-while true; do
-    #-fs
-    echo "starting ffplay"
-    ffplay -fs -vf "crop=704:384:0:0" -hide_banner -loglevel verbose -rtsp_transport tcp -i "rtsp://$USER:$PASS@$IP:554/cam/realmonitor?channel=0&subtype=0" 2>&1 | tr '\r' '\n' > ffplay.log &
-    FFPLAY_PID=$!
+#!/usr/bin/env python
+import subprocess
+import time
+import re
+import signal
+import sys
 
-    sleep 10
+def start_ffplay(ip, user, password):
+    """Start ffplay and return the process object."""
+    command = [
+        "ffplay",
+        "-vf", "crop=704:384:0:0",
+        "-fs", "-hide_banner", "-loglevel", "verbose",
+        "-rtsp_transport", "tcp",
+        f"rtsp://{user}:{password}@{ip}:554/cam/realmonitor?channel=0&subtype=0"
+    ]
+    process = subprocess.Popen(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+    return process
 
-    while true; do
-        # Check if ffplay is still running
-        if ! ps -p $FFPLAY_PID > /dev/null; then
-            echo "ffplay is not running..."
-            break
-        fi
-  
-        if [ $(stat -c%s "ffplay.log") -gt 1048576 ]; then
-            echo "Truncating log file..."
-            truncate -s 0 ffplay.log
-        fi
+def monitor_ffplay(ip, user, password):
+    """Monitor ffplay output and check for conditions."""
+    buffer = []
+    buffer_max_size = 200  # Keep last 200 lines in memory
+    empty_queue_threshold = 100  # Number of "vq= * 0KB" lines to trigger a restart
 
-        if [ $(tail -n 200 ffplay.log | grep -c "vq= * 0KB") -gt 100 ]; then
-            echo "Video queue is empty for too long."
-            kill $FFPLAY_PID
-            break
-        fi
+    while True:
+        print("Starting ffplay...")
+        process = start_ffplay(ip, user, password)
 
-        sleep 5
-    done
-done
+        while True:
+            # Check if ffplay is still running
+            if process.poll() is not None:
+                print("ffplay is not running...")
+                break
+
+            # Read output from ffplay
+            output = process.stdout.readline().strip()
+            if output:
+                print(output)  # Print output for debugging
+                buffer.append(output)
+                if len(buffer) > buffer_max_size:
+                    buffer.pop(0)  # Remove the oldest line to keep buffer size fixed
+
+            # Check if video queue is empty for too long
+            empty_queue_count = sum(1 for line in buffer if re.search(r"vq=\s*0KB", line))
+            if empty_queue_count > empty_queue_threshold:
+                print("Video queue is empty for too long.")
+                process.terminate()
+                process.wait()
+                break
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Usage: python monitor_ffplay.py <IP> <USER> <PASS>")
+        sys.exit(1)
+
+    ip = sys.argv[1]
+    user = sys.argv[2]
+    password = sys.argv[3]
+
+    monitor_ffplay(ip, user, password)

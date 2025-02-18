@@ -8,7 +8,8 @@ import sys
 def start_ffplay(ip, user, password):
     """Start ffplay and return the process object."""
     command = [
-        "ffplay", "-fs", "-hide_banner", "-loglevel", "verbose",
+        "ffplay",
+        "-fs", "-hide_banner", "-loglevel", "verbose",
         "-rtsp_transport", "tcp",
         f"rtsp://{user}:{password}@{ip}:554/cam/realmonitor?channel=1&subtype=0"
     ]
