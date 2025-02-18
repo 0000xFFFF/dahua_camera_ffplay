@@ -30,6 +30,7 @@ def monitor_ffplay(ip, user, password):
     while True:
         print("Starting ffplay...")
         process = start_ffplay(ip, user, password)
+        time.sleep(3)  # Wait for ffplay to initialize
 
         while True:
             # Check if ffplay is still running
