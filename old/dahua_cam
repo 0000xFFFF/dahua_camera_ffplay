@@ -5,19 +5,14 @@ import re
 import signal
 import sys
 
-def start_ffplay(ip, user, password, ch):
+def start_ffplay(ip, user, password):
     """Start ffplay and return the process object."""
-    command = [ "ffplay" ]
-
-    if ch == "0":
-        command += ["-vf", "crop=704:384:0:0"]
-
-    command += [
+    command = [
+        "ffplay",
         "-fs", "-hide_banner", "-loglevel", "verbose",
         "-rtsp_transport", "tcp",
-        f"rtsp://{user}:{password}@{ip}:554/cam/realmonitor?channel={ch}&subtype=0"
+        f"rtsp://{user}:{password}@{ip}:554/cam/realmonitor?channel=1&subtype=0"
     ]
-    print(command)
     process = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,
@@ -26,7 +21,7 @@ def start_ffplay(ip, user, password, ch):
     )
     return process
 
-def monitor_ffplay(ip, user, password, ch):
+def monitor_ffplay(ip, user, password):
     """Monitor ffplay output and check for conditions."""
     buffer = []
     buffer_max_size = 200  # Keep last 200 lines in memory
@@ -35,7 +30,7 @@ def monitor_ffplay(ip, user, password, ch):
     while True:
         print("Starting ffplay...")
         buffer.clear()
-        process = start_ffplay(ip, user, password, ch)
+        process = start_ffplay(ip, user, password)
         time.sleep(3)  # Wait for ffplay to initialize
 
         while True:
@@ -62,13 +57,12 @@ def monitor_ffplay(ip, user, password, ch):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print(f"Usage: python {sys.argv[0]} <IP> <USER> <PASS> <CHANNEL>")
+    if len(sys.argv) != 4:
+        print(f"Usage: python {sys.argv[0]} <IP> <USER> <PASS>")
         sys.exit(1)
 
     ip = sys.argv[1]
     user = sys.argv[2]
     password = sys.argv[3]
-    ch = sys.argv[4]
 
-    monitor_ffplay(ip, user, password, ch)
+    monitor_ffplay(ip, user, password)
