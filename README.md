@@ -12,7 +12,8 @@ stream dahua video camera (rtsp) (ffplay) (auto restart on network error)
 ./dahua_cam -h
 ```
 ```
-usage: dahua_cam [-h] -i <ip> -u <user> -p <pass> [-c <ch>] [-s <ch>] [-a <area>] [-ww <px>] [-wh <px>] [-fs] [-d] [-r <index>]
+usage: dahua_cam [-h] -i <ip> -u <user> -p <pass> [-c <ch>] [-s <ch>]
+                 [-a <area>] [-ww <px>] [-wh <px>] [-fs] [-d] [-r <index>]
 
 dahua camera motion detection
 
