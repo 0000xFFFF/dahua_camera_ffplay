@@ -5,12 +5,12 @@ import re
 
 import argparse
 
-parser = argparse.ArgumentParser(description="dahua camera motion detection")
+parser = argparse.ArgumentParser(description="stream dahua camera with ffplay")
 parser.add_argument("-i", "--ip", required=True, metavar="<ip>", type=str, help="ip to connect to")
 parser.add_argument("-u", "--username", required=True, metavar="<user>", type=str, help="account username")
 parser.add_argument("-p", "--password", required=True, metavar="<pass>", type=str, help="account password")
-parser.add_argument("-c", "--channel", default=1, metavar="<ch>", type=str, help="account password")
-parser.add_argument("-s", "--subtype", default=0, metavar="<ch>", type=str, help="account password")
+parser.add_argument("-c", "--channel", default=1, metavar="<ch>", type=str, help="channel")
+parser.add_argument("-s", "--subtype", default=0, metavar="<ch>", type=str, help="subtype")
 parser.add_argument("-a", "--area", default=10, metavar="<area>", type=int, help="contour area for detection (drawing rectangle)")
 parser.add_argument("-ww", "--width", default=1920, metavar="<px>", type=int, help="window pixels width")
 parser.add_argument("-wh", "--height", default=1080, metavar="<px>", type=int, help="window pixels height")
