@@ -15,7 +15,7 @@ stream dahua video camera (rtsp) (ffplay) (auto restart on network error)
 usage: dahua_cam [-h] -i <ip> -u <user> -p <pass> [-c <ch>] [-s <ch>]
                  [-a <area>] [-ww <px>] [-wh <px>] [-fs] [-d] [-r <index>]
 
-stream dahua camera with ffplay
+stream dahua video camera (rtsp) (ffplay) (auto restart on network error)
 
 options:
   -h, --help                 show this help message and exit
