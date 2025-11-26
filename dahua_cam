@@ -50,6 +50,7 @@ def start_ffplay():
         stderr=subprocess.STDOUT,
         universal_newlines=True,
     )
+    print(" ".join(command))
     return process
 
 
